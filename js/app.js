@@ -1,5 +1,11 @@
 var blockWidth = 100;
 var blockHeight = 85;
+var edge_x = 450;
+var edge_y = 450;
+var player_pos_x = 200;
+var player_pos_y = 400;
+var player_width = 101;
+var player_height = 171;
 
 
 // Enemies our player must avoid
@@ -12,13 +18,21 @@ var Enemy = function(x, y) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     //set the speed
-    var pxlpermsec = 200;
+    var pxlpermsec = 100;
     this.speed = Math.floor(Math.random()*pxlpermsec + 1);
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function(dt, player) {
+
+    //console.log(this.x);
+    if (this.x < edge_x){
+        this.x += this.speed * dt;
+    } else {
+        this.x = 0;
+    }
+
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -32,8 +46,7 @@ Enemy.prototype.render = function() {
 
 var enemy = new Enemy(0, 0);
 
-// Place all enemy objects in an array called allEnemies
-var allEnemies = [new Enemy (0, 200), new Enemy(100, 400), new Enemy(200, 300)];
+
 
 
 
@@ -50,32 +63,36 @@ var player = function(x, y){
         this.x -= blockWidth;
     };
     this.moveRight = function(){
-        this.x += blockWidth; };
-    this.moveUp = function(){ this.y -= blockHeight; };
-    this.moveDown = function(){ this.y -= blockHeight; };
+        this.x += blockWidth; 
+    };
+    this.moveUp = function(){ 
+        this.y -= blockHeight*0.5; 
+    };
+    this.moveDown = function(){ 
+        this.y += blockHeight*0.5; 
+    };
 };
 
 
 player.prototype.update = function(dt){
     if (this.x < 0) {
         this.x = 0;
-    } else if (this.x > 405) {
-        this.x = 405;
-    } else if (this.y === 0) {
-        this.y = 405;
+    } else if (this.x > edge_x - blockWidth * 0.5) {
+        this.x = edge_x - blockWidth * 0.5;
+        //console.log(this.x);
     } else if (this.y < 0) {
-        this.y = 450;
-    } else if (this.y > 550) {
-        this.y = 505;
+        this.y = 0;
+    } else if (this.y === 0){
+        this.y = player_pos_y ;
+        this.x = player_pos_x;
+    }else if (this.y > this.y > edge_y - blockHeight * 0.5) {
+        this.y = edge_y - blockHeight * 0.5;
     }
 };
 
 player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-
-// Now instantiate your objects.
 
 
 
@@ -100,8 +117,37 @@ player.prototype.handleInput = function(key){
 
  };
 
+
+
+ //Collision code for player class
+
+ player.prototype.collisions = function (targets){
+    if (targets.constructor === Array){
+        var target;
+        for (var i =0; i < targets.length; i++){
+            targets[i] = target;
+            this.collisions(target);
+        }
+    } else {
+        this.collisions(target);
+    }
+};
+
+ //collision code
+var collisions = function(target){
+    if (target.x <= player.x + player_width * 0.5){
+        console.log("collision");
+    } else if (target.y <= player.y + player_height * 0.5){
+        console.log("collision");
+    }
+};
+
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+var allEnemies = [new Enemy (0, 200), new Enemy(100, 400), new Enemy(200, 300)]; 
+
 // Place the player object in a variable called player
-var player = new player(252,606);
+var player = new player(200, 400);
 
 
 
