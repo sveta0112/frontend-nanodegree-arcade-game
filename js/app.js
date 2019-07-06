@@ -125,17 +125,18 @@ player.prototype.handleInput = function(allowedKeys){
             //this.moveLeft();
             break;
         case 'up':
-            if (this.y > this.height){
+            if (this.y > blockHeight * 0.5){
                 this.y -= blockHeight;
-            } else if (this.y <= this.height){
+            } else if (this.y < this.height){
                 this.score += 100;
-                document.getElementById("myScoreDivId").innerHTML = player.score;
-                this.y = 0;
+                //document.getElementById("myScoreDivId").innerHTML = player.score;
+                //this.y = 0;
                 player.reset();
             } else {
                 this.y = 0;
                 player.reset();
             }
+            document.getElementById("Score").innerHTML = player.score;
             //this.moveUp();
             break;	            
         case 'right':
@@ -163,33 +164,48 @@ player.prototype.handleInput = function(allowedKeys){
  };
 
 //collision code
- var checkCollisions = function(target){
-    if (player.x <= target.x && player.x + player.width  >= target.x && player.y <= target.y && player.y + player.height >= target.y){
-        console.log("collision is happening!");
+ var checkCollisions = function(targets){
+    var target;
+    var isCollision = true;
+    
+    if (Array.isArray(targets)){
+        for (var i =0; i < targets.length; i++){
+            target = targets[i];
+            var counter = 0;
+
+
+            if (player.x < target.x + 50 && player.x + player.width  > target.x && player.y < target.y + 40 && player.y + player.height > target.y){
+                var oldTarget = target;
+                //console.log("collision is happening!");
+                //console.log(target);
+                counter++;
+
+                if (counter > 1 && isCollision){
+                    isCollision = false;
+                }
+            }
+        }
+
+        return isCollision;
     }
-    if (player.lives > 1) {
-        player.lives -= 1;
 
-        player.reset();
-    }
-
-
-    document.getElementById("myLivesDivId").innerHTML = player.lives;
-
- };
+};
 
 
  //Collision code for player class
 
  player.prototype.checkCollisions = function (targets){
-     var target;
-     if (Array.isArray(targets)){
-        for (var i =0; i < targets.length; i++){
-            target = targets[i];
-            checkCollisions(target);
-            //console.log("Collision!");
-        }   
-     }
+    var bug = checkCollisions(allEnemies);
+    if (bug){
+        if (this.lives === 0){
+            alert("Game Over, Try Again!");
+            this.reset();
+        }else if (this.lives > 0){
+            this.lives -= 1;
+            //this.reset();
+        }
+        document.getElementById("Lives").innerHTML= this.lives;
+    }	    
 
  };
 
@@ -198,12 +214,12 @@ player.prototype.handleInput = function(allowedKeys){
  
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-var allEnemies = [new Enemy (0, 200), new Enemy(100, 400), new Enemy(200, 300)]; 
+var allEnemies = [new Enemy (0, 100), new Enemy(0, 200), new Enemy(50, 300)]; 
 
 // Place the player object in a variable called player
-var player = new player(200, 400);
+var player = new player(200, 450);
 
-
+//Define handleInput function
 
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
