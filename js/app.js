@@ -4,12 +4,11 @@ var edge_x = 450;
 var edge_y = 450;
 var player_pos_x = 200;
 var player_pos_y = 400;
-var player_width = 101;
-var player_height = 171;
+
 
 
 // Enemies our player must avoid
-var Enemy = function(x, y) {
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = x;
@@ -19,7 +18,7 @@ var Enemy = function(x, y) {
     this.sprite = 'images/enemy-bug.png';
     //set the speed
     var pxlpermsec = 100;
-    this.speed = Math.floor(Math.random()*pxlpermsec + 1);
+    this.speed = Math.random()*pxlpermsec + 1;
 };
 
 // Update the enemy's position, required method for game
@@ -31,6 +30,7 @@ Enemy.prototype.update = function(dt, player) {
         this.x += this.speed * dt;
     } else {
         this.x = 0;
+        this.x += this.speed * dt;
     }
 
     // You should multiply any movement by the dt parameter
@@ -55,11 +55,15 @@ var enemy = new Enemy(0, 0);
 // a handleInput() method.
 
 var player = function(x, y){
-    this.x = x;
-    this.y = y;
+    this.x = player_pos_x;
+    this.y = y;	    this.y = player_pos_y;
+    this.height = 83;
+    this.width = 70;
+    this.score = 0;
+    this.lives = 5;
     this.sprite = 'images/char-boy.png';
     //assign player's movement
-    this.moveLeft = function(){
+    /*this.moveLeft = function(){
         this.x -= blockWidth;
     };
     this.moveRight = function(){
@@ -70,24 +74,33 @@ var player = function(x, y){
     };
     this.moveDown = function(){ 
         this.y += blockHeight*0.5; 
-    };
+    };*/
 };
 
 
 player.prototype.update = function(dt){
-    if (this.x < 0) {
-        this.x = 0;
-    } else if (this.x > edge_x - blockWidth * 0.5) {
-        this.x = edge_x - blockWidth * 0.5;
-        //console.log(this.x);
-    } else if (this.y < 0) {
-        this.y = 0;
-    } else if (this.y === 0){
-        this.y = player_pos_y ;
-        this.x = player_pos_x;
-    }else if (this.y > this.y > edge_y - blockHeight * 0.5) {
-        this.y = edge_y - blockHeight * 0.5;
-    }
+    // if (this.x < 0) {
+    //     this.x = 0;
+    // } else if (this.x > edge_x - blockWidth * 0.5) {
+    //     this.x = edge_x - blockWidth * 0.5;
+    //     //console.log(this.x);
+    // } else if (this.y < 0) {
+    //     this.y = 0;
+    // } else if (this.y === 0){
+    //     this.y = player_pos_y ;
+    //     this.x = player_pos_x;
+    // }else if (this.y > this.y > edge_y - blockHeight * 0.5) {
+    //     this.y = edge_y - blockHeight * 0.5;
+    // }
+    this.x = this.x;
+    this.y = this.y; 
+
+};
+
+
+player.prototype.reset = function(){
+    this.x = player_pos_x;
+    this.y = player_pos_y;
 };
 
 player.prototype.render = function(){
@@ -99,49 +112,82 @@ player.prototype.render = function(){
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-player.prototype.handleInput = function(key){
-    switch (key) {
+player.prototype.handleInput = function(allowedKeys){
+    switch (allowedKeys) {
         case 'left': 
-            this.moveLeft();
+            if (this.x > this.width){
+                this.x -= blockWidth;
+            } 
+
+            if (this.y == 0){
+                player.reset();
+            }
+            //this.moveLeft();
             break;
         case 'up':
-            this.moveUp();
-            break;
+            if (this.y > this.height){
+                this.y -= blockHeight;
+            } else if (this.y <= this.height){
+                this.score += 100;
+                document.getElementById("myScoreDivId").innerHTML = player.score;
+                this.y = 0;
+                player.reset();
+            } else {
+                this.y = 0;
+                player.reset();
+            }
+            //this.moveUp();
+            break;	            
         case 'right':
-            this.moveRight();
-            break;
+            if (this.x + blockWidth < ctx.canvas.width - this.width){
+                this.x += blockWidth;
+            } 
+
+            if (this.y == 0){
+                player.reset();
+            }
+            //this.moveRight();
+            break;	            
         case 'down':
-            this.moveDown();
-            break;
+            if (this.y < ctx.canvas.height - this.height && this.y != 0 && this.y + this.height < ctx.canvas.height - blockHeight){
+                this.y += blockHeight* 0.5;
+            } else if ((this.y + this.height) > ctx.canvas.height){
+                this.y = player_pos_y ;
+            } else {
+                player.reset();
+            }
+            //this.moveDown();
+            break;	            
+    }
+
+ };
+
+//collision code
+ var checkCollisions = function(target){
+    if (player.x < target.x + target.width && player.x + player.width > target.x && player.y < target.y + target.height && player.y + player.height > target.y){
+        console.log("collision is happening!");
     }
 
  };
 
 
-
  //Collision code for player class
 
- player.prototype.collisions = function (targets){
-    if (targets.constructor === Array){
-        var target;
+ player.prototype.checkCollisions = function (targets){
+     var target;
+     if (Array.isArray(targets)){
         for (var i =0; i < targets.length; i++){
-            targets[i] = target;
-            this.collisions(target);
-        }
-    } else {
-        this.collisions(target);
-    }
-};
+            target = targets[i];
+            checkCollisions(target);
+            //console.log("Collision!");
+        }   
+     }
 
- //collision code
-var collisions = function(target){
-    if (target.x <= player.x + player_width * 0.5){
-        console.log("collision");
-    } else if (target.y <= player.y + player_height * 0.5){
-        console.log("collision");
-    }
-};
+ };
 
+ 
+
+ 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [new Enemy (0, 200), new Enemy(100, 400), new Enemy(200, 300)]; 
