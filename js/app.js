@@ -63,7 +63,7 @@ var player = function(x, y){
     this.lives = 5;
     this.sprite = 'images/char-boy.png';
     //assign player's movement
-    /*this.moveLeft = function(){
+    this.moveLeft = function(){
         this.x -= blockWidth;
     };
     this.moveRight = function(){
@@ -74,7 +74,7 @@ var player = function(x, y){
     };
     this.moveDown = function(){ 
         this.y += blockHeight*0.5; 
-    };*/
+    };
 };
 
 
@@ -116,7 +116,7 @@ player.prototype.handleInput = function(allowedKeys){
     switch (allowedKeys) {
         case 'left': 
             if (this.x > this.width){
-                this.x -= blockWidth;
+                this.moveLeft();
             } 
 
             if (this.y == 0){
@@ -126,7 +126,7 @@ player.prototype.handleInput = function(allowedKeys){
             break;
         case 'up':
             if (this.y > blockHeight * 0.5){
-                this.y -= blockHeight;
+                this.moveUp();
             } else if (this.y < this.height){
                 this.score += 100;
                 //document.getElementById("myScoreDivId").innerHTML = player.score;
@@ -141,7 +141,7 @@ player.prototype.handleInput = function(allowedKeys){
             break;	            
         case 'right':
             if (this.x + blockWidth < ctx.canvas.width - this.width){
-                this.x += blockWidth;
+                this.moveRight();
             } 
 
             if (this.y == 0){
@@ -151,7 +151,7 @@ player.prototype.handleInput = function(allowedKeys){
             break;	            
         case 'down':
             if (this.y < ctx.canvas.height - this.height && this.y != 0 && this.y + this.height < ctx.canvas.height - blockHeight){
-                this.y += blockHeight* 0.5;
+                this.moveDown();
             } else if ((this.y + this.height) > ctx.canvas.height){
                 this.y = player_pos_y ;
             } else {
@@ -167,26 +167,31 @@ player.prototype.handleInput = function(allowedKeys){
  var checkCollisions = function(targets){
     var target;
     var isCollision = true;
-    
+    var counter = 0;
+
     if (Array.isArray(targets)){
         for (var i =0; i < targets.length; i++){
             target = targets[i];
-            var counter = 0;
+            //var counter = 0;
 
+            if (targets = allEnemies){
+                target.width = 50;
+                target.height = 40;
+            }
 
-            if (player.x < target.x + 50 && player.x + player.width  > target.x && player.y < target.y + 40 && player.y + player.height > target.y){
-                var oldTarget = target;
-                //console.log("collision is happening!");
-                //console.log(target);
-                counter++;
-
+            if (player.x < target.x + target.width && player.x + player.width  > target.x && player.y < target.y + target.height && player.y + player.height > target.y){
+                console.log ("collision!!");
+                isCollision = true;
+                counter ++;
+                //return target;
                 if (counter > 1 && isCollision){
                     isCollision = false;
                 }
+                return isCollision;
             }
         }
 
-        return isCollision;
+        
     }
 
 };
@@ -197,12 +202,11 @@ player.prototype.handleInput = function(allowedKeys){
  player.prototype.checkCollisions = function (targets){
     var bug = checkCollisions(allEnemies);
     if (bug){
-        if (this.lives === 0){
-            alert("Game Over, Try Again!");
-            this.reset();
-        }else if (this.lives > 0){
+        if (this.lives > 0){
+            //alert("Game Over, Try Again!");
             this.lives -= 1;
-            //this.reset();
+        }else if (this.lives === 0){
+            this.reset();
         }
         document.getElementById("Lives").innerHTML= this.lives;
     }	    
