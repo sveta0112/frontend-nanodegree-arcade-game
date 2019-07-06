@@ -164,9 +164,17 @@ player.prototype.handleInput = function(allowedKeys){
 
 //collision code
  var checkCollisions = function(target){
-    if (player.x < target.x + target.width && player.x + player.width > target.x && player.y < target.y + target.height && player.y + player.height > target.y){
+    if (player.x <= target.x && player.x + player.width  >= target.x && player.y <= target.y && player.y + player.height >= target.y){
         console.log("collision is happening!");
     }
+    if (player.lives > 1) {
+        player.lives -= 1;
+
+        player.reset();
+    }
+
+
+    document.getElementById("myLivesDivId").innerHTML = player.lives;
 
  };
 
