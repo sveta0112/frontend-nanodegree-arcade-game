@@ -1,20 +1,22 @@
-# Classic Arcade Game Clone Project
+## Classic Arcade Game decription
+This is arcade game allows player to move within field(left, right, up, down), once player reaches the water area without colliding with enemies (3 bugs), game is over and won!
 
-## Table of Contents
 
-- [Instructions](#instructions)
-- [Contributing](#contributing)
+## Challenge of game
+Try to reach the water area by avoiding collision with enemies, which move on different speeds.
 
-## Instructions
 
-Use this [rubric](https://review.udacity.com/#!/rubrics/15/view) for self-checking your submission.
+## Quickstart
+* Clone  or download the following repo https://github.com/sveta0112/frontend-nanodegree-arcade-game
+* Open the project folder.
+* Locate the file 'index.html' and open it with preferred browser.
 
-Make sure the functions you write are **object-oriented** - either class functions (like `Player` and `Enemy`) or class prototype functions such as `Enemy.prototype.checkCollisions`. Also make sure that the keyword `this` is used appropriately within your class and class prototype functions to refer to the object the function is called upon.
+## Instructions for game
+* Try to move player to left, right, up, down with arrow keys on keyboard.
+* Your goal to reach water area using those arrow keys without 'hitting' bugs
+* Once player collides with one of the enemies, game will start over
+* Once player reaches water area, congratulation window will pop up, and game will start over.
 
-Your **README.md** file should be updated with instructions on both how to 1. Run and 2. Play your arcade game.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
 
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+![snippet](images/arcade.png)
