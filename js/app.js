@@ -49,7 +49,7 @@ let Player = function(x, y) {
 //updates x and y of player
 Player.prototype.update = function(dt) {
     this.x = this.x;
-    this.y = this.y; 
+    this.y = this.y;
 };
 
 //resets player positions for x(200) and y(400)
@@ -68,7 +68,7 @@ Player.prototype.render = function() {
 // Player.handleInput() method. You don't need to modify this.
 Player.prototype.handleInput = function(key) {
     switch (key) {
-        case 'left': 
+        case 'left':
             if(this.x >= 101) this.x -= 101;
             break;
         case 'up':
@@ -94,7 +94,7 @@ let checkCollisions = function(targets) {
         //loop through it
         for (var i = 0; i < targets.length; i++){
             //individual enemy
-            target = targets[i];    
+            target = targets[i];
             //in case satisfy below condition, set isColiided to true
             if (player.x < target.x + target.width && player.x + player.width  > target.x && player.y < target.y + target.height && player.y + player.height > target.y){
                 console.log ("collision!!");
@@ -122,15 +122,15 @@ Player.prototype.checkCollisions = function (targets) {
             alert( 'You have won!!!');
             this.reset();
         }
-    }   
+    }
 };
 
- 
 
- 
+
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-const allEnemies = [new Enemy (0, 63), new Enemy(0, 146), new Enemy(0, 229)]; 
+const allEnemies = [new Enemy (0, 63), new Enemy(0, 146), new Enemy(0, 229)];
 
 // Place the player object in a variable called player
 let player = new Player(202, 405);
