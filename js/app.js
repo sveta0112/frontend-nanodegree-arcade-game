@@ -92,7 +92,7 @@ let checkCollisions = function(targets) {
     //check allEnemies if its array
     if (Array.isArray(targets)){
         //loop through it
-        for (var i = 0; i < targets.length; i++){
+        for (var i = 0; i < targets.length; i++) {
             //individual enemy
             target = targets[i];
             //in case satisfy below condition, set isColiided to true
